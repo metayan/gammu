@@ -3,10 +3,11 @@
 # This script downloads list of Sony-Ericsson phones from web and
 # prepares list suitable for common/gsmphones.c
 
-URL=http://homepage.mac.com/alvinmok/ericsson/types.html
-
-tmp=`mktemp`
-wget -O - "$URL" | tr '\r' '\n' > "$tmp"
+tmp=$(dirname $0)/se-list
+if [ ! -f "$tmp" ]; then
+  URL=https://web.archive.org/web/20120620054856/http://homepage.mac.com:80/alvinmok/ericsson/types.html
+  wget -O - "$URL" | tr '\r' '\n' > "$tmp"
+fi
 
 awk 'BEGIN { p = 0; }
 /Type code orderin/ { p = 1; }
@@ -57,5 +58,3 @@ awk 'BEGIN { p = 0; }
 			}
 		}
 	}'
-
-rm -f "$tmp"
